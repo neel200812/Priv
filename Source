@@ -1,0 +1,2880 @@
+    local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+    
+    local Window = OrionLib:MakeWindow({Name = "Lockers Of Death GUI", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+
+    local AimingT = Window:MakeTab({
+        Name = "Aiming",
+        Icon = "",
+        PremiumOnly = false
+    })
+    
+    local Hacker_RageT = Window:MakeTab({
+        Name = "Hacker Rage",
+        Icon = "",
+        PremiumOnly = false
+    })
+    
+    OrionLib:MakeNotification({
+        Name = "Lockers Of Death GUI",
+        Content = "Loaded successfully",
+        Image = "rbxassetid://4483345998",
+        Time = 5
+    })
+
+    -- Lock Section
+    
+    AimingT:AddButton({
+        Name = "Legit Streamable 40-60",
+        Callback = function()
+            loadstring(game:HttpGet("https://pastebin.com/raw/SbtCNZg7"))()
+            DaHoodSettings.Prediction = 0.12118333
+            Aiming.TargetPart = {"Head", "UpperTorso", "LowerTorso", "RightFoot", "LeftFoot"}
+            Aiming.FOV = 8
+            Aiming.FOVSideTs = 8
+            Aiming.HitChance = 139
+          end    
+    })
+    
+    AimingT:AddButton({
+        Name = "VoidX(Q) 40-60",
+        Callback = function()
+    -- main aimlock settings
+    local configs = {
+        main = {
+            enabled = true,
+            aimlockkey = "q",
+            prediction = 0.12118333,
+            aimpart = 'HumanoidRootPart', -- Head, UpperTorso, HumanoidRootPart, LowerTorso
+            notifications = true
+        }
+    }
+    
+    -- box / marker settings
+    
+    local boxsettings = {
+        box = {
+            Showbox = true,
+    
+            boxsize = Vector3.new(3.3, 3, 2.8), -- Box Size
+            markercolor = Color3.fromRGB(0, 0, 0), -- Marrker Color
+            markersize = UDim2.new(1, 0, 3, 0) -- Marker Size
+        }
+    }
+    
+    -- dont mess with anything below
+    local box = Instance.new("Part", game.Workspace)
+    
+    local Mouse = game.Players.LocalPlayer:GetMouse()
+    
+    function makemarker(Parent, Adornee, Color, Size, Size2)
+        local box = Instance.new("BillboardGui", Parent)
+        box.Name = "PRIVATE-REWRITE!"
+        box.Adornee = Adornee
+        box.Size = UDim2.new(Size, Size2, Size, Size2)
+        box.AlwaysOnTop = true
+    
+        local a = Instance.new("Frame", box)
+        a.Size = boxsettings.box.markersize
+        a.BackgroundColor3 = Color
+    
+        local g = Instance.new("UICorner", a)
+        g.CornerRadius = UDim.new(50, 25)
+        return (box)
+    end
+    
+    local Plr
+    Mouse.KeyDown:Connect(function(KeyPressed)
+        if KeyPressed == (configs.main.aimlockkey) then
+            if configs.main.enabled == true then
+                configs.main.enabled = false
+                if configs.main.notifications == true then
+                    Plr = FindClosestUser()
+                    game.StarterGui:SetCore("SendNotification", {
+                        Title = "VoidX.privat",
+                        Text = "Unlocked;"
+                    })
+                end
+            else
+                Plr = FindClosestUser()
+                configs.main.enabled = true
+                if configs.main.notifications == true then
+                    game.StarterGui:SetCore("SendNotification", {
+                        Title = "VoidX.privat",
+                        Text = "Locked On;  " .. tostring(Plr.Character.Humanoid.DisplayName)
+                    })
+                end
+            end
+        end
+    end)
+    
+    local data = game.Players:GetPlayers()
+    function noob(player)
+        local character
+        repeat
+            wait()
+        until player.Character
+        local handler = makemarker(guimain, player.Character:WaitForChild(configs.main.aimpart),
+            Color3.fromRGB(255,255,255), 0.10, 8)
+        handler.Name = player.Name
+        player.CharacterAdded:connect(function(Char)
+            handler.Adornee = Char:WaitForChild("HumanoidRootPart")
+        end)
+    end
+    
+    for i = 1, #data do
+        if data[i] ~= game.Players.LocalPlayer then
+            noob(data[i])
+        end
+    end
+    
+    game.Players.PlayerAdded:connect(function(Player)
+        noob(Player)
+    end)
+    
+    spawn(function()
+        box.Anchored = true
+        box.CanCollide = false
+        box.Size = boxsettings.box.boxsize
+        if boxsettings.box.Showbox == true then
+            box.Transparency = 0
+        else
+            box.Transparency = 1
+        end
+        makemarker(box, box, boxsettings.box.markercolor, 0.40, 1)
+    end)
+    
+    function FindClosestUser()
+        local closestPlayer
+        local ShortestDistance = 300
+    
+        for i, v in pairs(game.Players:GetPlayers()) do
+            if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and
+                v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") then
+                local pos = game:GetService "Workspace".CurrentCamera:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+                local magnitude = (Vector2.new(pos.X, pos.Y) -
+                                      Vector2.new(game.Players.LocalPlayer:GetMouse().X,
+                        game.Players.LocalPlayer:GetMouse().Y)).magnitude
+                if magnitude < ShortestDistance then
+                    closestPlayer = v
+                    ShortestDistance = magnitude
+                end
+            end
+        end
+        return closestPlayer
+    end
+    
+    game:GetService "RunService".Stepped:connect(function()
+        if configs.main.enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
+            box.CFrame = CFrame.new(Plr.Character[configs.main.aimpart].Position +
+                                        (Plr.Character.UpperTorso.Velocity * configs.main.prediction))
+        else
+            box.CFrame = CFrame.new(0, 9999, 0)
+        end
+    end)
+    
+    repeat
+        wait()
+    until game:IsLoaded()
+    local mt = getrawmetatable(game)
+    local old = mt.__namecall
+    setreadonly(mt, false)
+    mt.__namecall = newcclosure(function(...)
+        local args = {...}
+        if configs.main.enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
+            args[3] = Plr.Character[configs.main.aimpart].Position +
+                          (Plr.Character[configs.main.aimpart].Velocity * configs.main.prediction)
+            return old(unpack(args))
+        end
+        return old(...)
+    end)
+          end    
+    })
+    
+    AimingT:AddButton({
+        Name = "Private lock(Q) 40-60",
+        Callback = function()
+     -- main aimlock settings
+     local configs = {
+        main = {
+            enabled = true,
+            aimlockkey = "q",
+            prediction = 0.12118333,
+            aimpart = 'HumanoidRootPart', -- Head, UpperTorso, HumanoidRootPart, LowerTorso
+            notifications = true
+        }
+      }
+      
+      -- box / marker settings
+      
+      local boxsettings = {
+        box = {
+            Showbox = true,
+      
+            boxsize = Vector3.new(3.3, 3, 2.8), -- Box Size
+            markercolor = Color3.fromRGB(1, 120, 145), -- Marrker Color
+            markersize = UDim2.new(1, 0, 3, 0) -- Marker Size
+        }
+      }
+      
+      -- dont mess with anything below
+      local box = Instance.new("Part", game.Workspace)
+      
+      local Mouse = game.Players.LocalPlayer:GetMouse()
+      
+      function makemarker(Parent, Adornee, Color, Size, Size2)
+        local box = Instance.new("BillboardGui", Parent)
+        box.Name = "PRIVATE-REWRITE!"
+        box.Adornee = Adornee
+        box.Size = UDim2.new(Size, Size2, Size, Size2)
+        box.AlwaysOnTop = true
+      
+        local a = Instance.new("Frame", box)
+        a.Size = boxsettings.box.markersize
+        a.BackgroundColor3 = Color
+      
+        local g = Instance.new("UICorner", a)
+        g.CornerRadius = UDim.new(50, 25)
+        return (box)
+      end
+      
+      local Plr
+      Mouse.KeyDown:Connect(function(KeyPressed)
+        if KeyPressed == (configs.main.aimlockkey) then
+            if configs.main.enabled == true then
+                configs.main.enabled = false
+                if configs.main.notifications == true then
+                    Plr = FindClosestUser()
+                    game.StarterGui:SetCore("SendNotification", {
+                        Title = "Private",
+                        Text = "Unlocked;"
+                    })
+                end
+            else
+                Plr = FindClosestUser()
+                configs.main.enabled = true
+                if configs.main.notifications == true then
+                    game.StarterGui:SetCore("SendNotification", {
+                        Title = "Private",
+                        Text = "Locked On;  " .. tostring(Plr.Character.Humanoid.DisplayName)
+                    })
+                end
+            end
+        end
+      end)
+      
+      local data = game.Players:GetPlayers()
+      function noob(player)
+        local character
+        repeat
+            wait()
+        until player.Character
+        local handler = makemarker(guimain, player.Character:WaitForChild(configs.main.aimpart),
+            Color3.fromRGB(107, 184, 255), 0.10, 8)
+        handler.Name = player.Name
+        player.CharacterAdded:connect(function(Char)
+            handler.Adornee = Char:WaitForChild("HumanoidRootPart")
+        end)
+      end
+      
+      for i = 1, #data do
+        if data[i] ~= game.Players.LocalPlayer then
+            noob(data[i])
+        end
+      end
+      
+      game.Players.PlayerAdded:connect(function(Player)
+        noob(Player)
+      end)
+      
+      spawn(function()
+        box.Anchored = true
+        box.CanCollide = false
+        box.Size = boxsettings.box.boxsize
+        if boxsettings.box.Showbox == true then
+            box.Transparency = 0.70
+        else
+            box.Transparency = 1
+        end
+        makemarker(box, box, boxsettings.box.markercolor, 0.40, 1)
+      end)
+      
+      function FindClosestUser()
+        local closestPlayer
+        local ShortestDistance = 300
+      
+        for i, v in pairs(game.Players:GetPlayers()) do
+            if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and
+                v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") then
+                local pos = game:GetService "Workspace".CurrentCamera:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+                local magnitude = (Vector2.new(pos.X, pos.Y) -
+                                      Vector2.new(game.Players.LocalPlayer:GetMouse().X,
+                        game.Players.LocalPlayer:GetMouse().Y)).magnitude
+                if magnitude < ShortestDistance then
+                    closestPlayer = v
+                    ShortestDistance = magnitude
+                end
+            end
+        end
+        return closestPlayer
+      end
+      
+      game:GetService "RunService".Stepped:connect(function()
+        if configs.main.enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
+            box.CFrame = CFrame.new(Plr.Character[configs.main.aimpart].Position +
+                                        (Plr.Character.UpperTorso.Velocity * configs.main.prediction))
+        else
+            box.CFrame = CFrame.new(0, 9999, 0)
+        end
+      end)
+      
+      repeat
+        wait()
+      until game:IsLoaded()
+      local mt = getrawmetatable(game)
+      local old = mt.__namecall
+      setreadonly(mt, false)
+      mt.__namecall = newcclosure(function(...)
+        local args = {...}
+        if configs.main.enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
+            args[3] = Plr.Character[configs.main.aimpart].Position +
+                          (Plr.Character[configs.main.aimpart].Velocity * configs.main.prediction)
+            return old(unpack(args))
+        end
+        return old(...)
+      end)
+          end    
+    })
+    
+    AimingT:AddButton({
+        Name = "Best Lock 40-60",
+        Callback = function()
+      --[[
+    
+    ██╗  ██╗ █████╗ ██████╗ ██╗    ██╗    ██╗
+    ██║ ██╔╝██╔══██╗██╔══██╗██║    ██║    ██║
+    █████╔╝ ███████║██████╔╝██║    ██║ █╗ ██║
+    ██╔═██╗ ██╔══██║██╔══██╗██║    ██║███╗██║
+    ██║  ██╗██║  ██║██║  ██║██████╗╚███╔███╔╝
+    ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══╝╚══╝ 
+    
+    --]]
+    
+    --dont mess with he settings unless u know what ur doing
+    
+    local Settings = {
+        rewrittenmain = {
+            Enabled = true,
+            Key = "q",
+            DOT = true,
+            AIRSHOT = true,
+            NOTIF = true, 
+            AUTOPRED = false, 
+            FOV = math.huge,
+            RESOVLER = false 
+        }
+      }
+      
+      local SelectedPart = "UpperTorso"                              
+      local Prediction = true
+      local PredictionValue = 0.12118333                            
+      
+      
+        local AnchorCount = 0
+        local MaxAnchor = 50
+      
+        local CC = game:GetService"Workspace".CurrentCamera
+        local Plr;
+        local enabled = false
+        local accomidationfactor = 0.12348
+        local mouse = game.Players.LocalPlayer:GetMouse()
+        local placemarker = Instance.new("Part", game.Workspace)
+      
+        function makemarker(Parent, Adornee, Color, Size, Size2)
+            local e = Instance.new("BillboardGui", Parent)
+            e.Name = "PP"
+            e.Adornee = Adornee
+            e.Size = UDim2.new(Size, Size2, Size, Size2)
+            e.AlwaysOnTop = Settings.rewrittenmain.DOT
+            local a = Instance.new("Frame", e)
+            if Settings.rewrittenmain.DOT == true then
+            a.Size = UDim2.new(2, 2, 2)
+            else
+            a.Size = UDim2.new(0, 0, 0, 0)
+            end
+            if Settings.rewrittenmain.DOT == true then
+            a.Transparency = 0
+            a.BackgroundTransparency = 0
+            else
+            a.Transparency = 1
+            a.BackgroundTransparency = 1
+            end
+            a.BackgroundColor3 = Color
+            local g = Instance.new("UICorner", a)
+            if Settings.rewrittenmain.DOT == false then
+            g.CornerRadius = UDim.new(0, 0)
+            else
+            g.CornerRadius = UDim.new(1, 1)
+            end
+            return(e)
+        end
+      
+        
+        local data = game.Players:GetPlayers()
+        function noob(player)
+            local character
+            repeat wait() until player.Character
+            local handler = makemarker(guimain, player.Character:WaitForChild(SelectedPart), Color3.fromRGB(68, 214, 44), 0.3, 3)
+            handler.Name = player.Name
+            player.CharacterAdded:connect(function(Char) handler.Adornee = Char:WaitForChild(SelectedPart) end)
+      
+      
+            spawn(function()                                    
+                while wait() do                                     
+                    if player.Character then                                    
+                    end                                    
+                end                                     
+            end)                                    
+        end                                    
+      
+        for i = 1, #data do
+            if data[i] ~= game.Players.LocalPlayer then
+                noob(data[i])
+            end
+        end
+      
+        game.Players.PlayerAdded:connect(function(Player)
+            noob(Player)
+        end)
+      
+        spawn(function()
+            placemarker.Anchored = true
+            placemarker.CanCollide = false
+            if Settings.rewrittenmain.DOT == true then
+            placemarker.Size = Vector3.new(6, 6, 6)
+            else
+            placemarker.Size = Vector3.new(0, 0, 0)
+            end
+            placemarker.Transparency = 1
+            if Settings.rewrittenmain.DOT then
+            makemarker(placemarker, placemarker, Color3.fromRGB(68, 214, 44), 0.40, 0)
+            end
+        end)
+      
+        game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(k)
+            if k == Settings.rewrittenmain.Key and Settings.rewrittenmain.Enabled then
+                if enabled == true then
+                    enabled = false
+                    if Settings.rewrittenmain.NOTIF == true then
+                        Plr = getClosestPlayerToCursor()
+                    game.StarterGui:SetCore("SendNotification", {
+                Title = "Lock Notification",
+                Text = "Unlocked",
+                Icon = "",
+                Duration = 1,
+      })
+                end
+                else
+                    Plr = getClosestPlayerToCursor()
+                    enabled = true
+                    if Settings.rewrittenmain.NOTIF == true then
+      
+                        game.StarterGui:SetCore("SendNotification", {
+                Title = "Lock Notification",
+                Text = "Locked On :"..tostring(Plr.Name); 
+                Icon = "",
+                Duration = 1,
+      })
+      
+                    end
+                end
+            end
+        end)
+      
+      
+      
+        function getClosestPlayerToCursor()
+            local closestPlayer
+            local shortestDistance = Settings.rewrittenmain.FOV
+      
+            for i, v in pairs(game.Players:GetPlayers()) do
+                if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") then
+                    local pos = CC:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+                    local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
+                    if magnitude < shortestDistance then
+                        closestPlayer = v
+                        shortestDistance = magnitude
+                    end
+                end
+            end
+            return closestPlayer
+        end
+      
+        local pingvalue = nil;
+        local split = nil;
+        local ping = nil;
+      
+        game:GetService"RunService".Stepped:connect(function()
+            if enabled and Plr.Character ~= nil and Plr.Character:FindFirstChild("HumanoidRootPart") then
+                placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor))
+            else
+                placemarker.CFrame = CFrame.new(0, 9999, 0)
+            end
+            if Settings.rewrittenmain.AUTOPRED == true then
+                 pingvalue = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+                 split = string.split(pingvalue,'(')
+                 ping = tonumber(split[1])
+                if ping < 130 then
+                    PredictionValue = 0.151
+                elseif ping < 125 then
+                    PredictionValue = 0.149
+                elseif ping < 110 then
+                    PredictionValue = 0.146
+                elseif ping < 105 then
+                    PredictionValue = 0.138
+                elseif ping < 90 then
+                    PredictionValue = 0.136
+                elseif ping < 80 then
+                    PredictionValue = 0.134
+                elseif ping < 70 then
+                    PredictionValue = 0.131
+                elseif ping < 60 then
+                    PredictionValue = 0.1229
+                elseif ping < 50 then
+                    PredictionValue = 0.1225
+                elseif ping < 40 then
+                    PredictionValue = 0.1256
+                end
+            end
+        end)
+      
+        local mt = getrawmetatable(game)
+        local old = mt.__namecall
+        setreadonly(mt, false)
+        mt.__namecall = newcclosure(function(...)
+            local args = {...}
+            if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" and Settings.rewrittenmain.Enabled and Plr.Character ~= nil then
+      
+                -- args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor)
+                --[[
+                if Settings.rewrittenmain.AIRSHOT == true then
+                    if game.Workspace.Players[Plr.Name].Humanoid:GetState() == Enum.HumanoidStateType.Freefall then -- Plr.Character:WaitForChild("Humanoid"):GetState() == Enum.HumanoidStateType.Freefall
+                        
+                        --// Airshot
+                        args[3] = Plr.Character.LeftFoot.Position+(Plr.Character.LeftFoot.Velocity*PredictionValue)
+                    else
+                        args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*PredictionValue)
+                    end
+                else
+                        args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*PredictionValue)
+                end
+                ]]
+                if Prediction == true then
+                    
+                args[3] = Plr.Character[SelectedPart].Position+(Plr.Character[SelectedPart].Velocity*PredictionValue)
+      
+                else
+      
+                args[3] = Plr.Character[SelectedPart].Position
+      
+                end
+      
+                return old(unpack(args))
+            end
+            return old(...)
+        end)
+      
+        game:GetService("RunService").RenderStepped:Connect(function()
+            if Settings.rewrittenmain.RESOVLER == true and Plr.Character ~= nil and enabled and Settings.rewrittenmain.Enabled then
+            if Settings.rewrittenmain.AIRSHOT == true and enabled and Plr.Character ~= nil then
+                
+                if game.Workspace.Players[Plr.Name].Humanoid:GetState() == Enum.HumanoidStateType.Freefall then -- Plr.Character:WaitForChild("Humanoid"):GetState() == Enum.HumanoidStateType.Freefall
+                    
+                    --// Airshot
+      
+                    --// Anchor Check
+      
+                    if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                        AnchorCount = AnchorCount + 1
+                        if AnchorCount >= MaxAnchor then
+                            Prediction = false
+                            wait(2)
+                            AnchorCount = 0;
+                        end
+                    else
+                        Prediction = true
+                        AnchorCount = 0;
+                    end
+      
+                    SelectedPart = "HumanoidRootPart"
+      
+                else
+                    --// Anchor Check
+      
+                    if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                        AnchorCount = AnchorCount + 1
+                        if AnchorCount >= MaxAnchor then
+                            Prediction = false
+                            wait(2)
+                            AnchorCount = 0;
+                        end
+                    else
+                        Prediction = true
+                        AnchorCount = 0;
+                    end
+      
+                    SelectedPart = "HumanoidRootPart"
+      
+                end
+                else
+      
+                    --// Anchor Check
+      
+                    if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                        AnchorCount = AnchorCount + 1
+                        if AnchorCount >= MaxAnchor then
+                            Prediction = false
+                            wait(2)
+                            AnchorCount = 0;
+                        end
+                    else
+                        Prediction = true
+                        AnchorCount = 0;
+                    end
+      
+                    SelectedPart = "HumanoidRootPart"
+                end
+      
+            else
+                    SelectedPart = "HumanoidRootPart"
+            end
+        end)
+      
+      --the cam lock
+      
+      getgenv().Prediction = 0.143105125985120958176	
+      getgenv().AimPart = "UpperTorso"	
+      getgenv().Key = "Q"	
+      getgenv().DisableKey = "P"	
+      
+      getgenv().FOV = true	
+      getgenv().ShowFOV = false	
+      getgenv().FOVSize = 55	
+      
+      --// Variables (Service)	
+      
+      local Players = game:GetService("Players")	
+      local RS = game:GetService("RunService")	
+      local WS = game:GetService("Workspace")	
+      local GS = game:GetService("GuiService")	
+      local SG = game:GetService("StarterGui")	
+      
+      --// Variables (regular)	
+      
+      local LP = Players.LocalPlayer	
+      local Mouse = LP:GetMouse()	
+      local Camera = WS.CurrentCamera	
+      local GetGuiInset = GS.GetGuiInset	
+      
+      local AimlockState = true	
+      local Locked	
+      local Victim	
+      
+      local SelectedKey = getgenv().Key	
+      local SelectedDisableKey = getgenv().DisableKey	
+        
+      --// Check if aimlock is loaded	
+      
+      if getgenv().Loaded == true then	
+        Notify("Aimlock is already loaded!")	
+        return	
+      end	
+      
+      getgenv().Loaded = true	
+      
+      --// FOV Circle	
+      
+      local fov = Drawing.new("Circle")	
+      fov.Filled = false	
+      fov.Transparency = 1	
+      fov.Thickness = 1	
+      fov.Color = Color3.fromRGB(255, 255, 0)	
+      fov.NumSideTs = 1000	
+      
+      --// Functions	
+      
+      function update()	
+        if getgenv().FOV == true then	
+            if fov then	
+      fov.Radius = getgenv().FOVSize * 2	
+                fov.Visible = getgenv().ShowFOV	
+      fov.Position = Vector2.new(Mouse.X, Mouse.Y + GetGuiInset(GS).Y)	
+      
+                return fov	
+            end	
+        end	
+      end	
+      
+      function WTVP(arg)	
+        return Camera:WorldToViewportPoint(arg)	
+      end	
+      
+      function WTSP(arg)	
+        return Camera.WorldToScreenPoint(Camera, arg)	
+      end	
+      
+      function getClosest()	
+        local closestPlayer	
+        local shortestDistance = math.huge	
+      
+        for i, v in pairs(game.Players:GetPlayers()) do	
+            local notKO = v.Character:WaitForChild("BodyEffects")["K.O"].Value ~= true	
+            local notGrabbed = v.Character:FindFirstChild("GRABBING_COINSTRAINT") == nil	
+              
+      if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild(getgenv().AimPart) and notKO and notGrabbed then	
+                local pos = Camera:WorldToViewportPoint(v.Character.PrimaryPart.Position)	
+      local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(Mouse.X, Mouse.Y)).magnitude	
+                  
+                if (getgenv().FOV) then	
+                    if (fov.Radius > magnitude and magnitude < shortestDistance) then	
+                        closestPlayer = v	
+                        shortestDistance = magnitude	
+                    end	
+                else	
+                    if (magnitude < shortestDistance) then	
+                        closestPlayer = v	
+                        shortestDistance = magnitude	
+                    end	
+                end	
+            end	
+        end	
+        return closestPlayer	
+      end	
+      
+      --// Checks if key is down	
+      
+      Mouse.KeyDown:Connect(function(k)	
+        SelectedKey = SelectedKey:lower()	
+        SelectedDisableKey = SelectedDisableKey:lower()	
+        if k == SelectedKey then	
+            if AimlockState == true then	
+                Locked = not Locked	
+                if Locked then	
+                    Victim = getClosest()	
+      
+                    Notify("Locked onto: "..tostring(Victim.Character.Humanoid.DisplayName))	
+                else	
+                    if Victim ~= nil then	
+                        Victim = nil	
+      
+                        Notify("Unlocked!")	
+                    end	
+                end	
+            else	
+                Notify("Aimlock is not enabled!")	
+            end	
+        end	
+        if k == SelectedDisableKey then	
+            AimlockState = not AimlockState	
+        end	
+      end)	
+      
+      --// Loop update FOV and loop camera lock onto target	
+      
+      RS.RenderStepped:Connect(function()	
+        update()	
+        if AimlockState == true then	
+            if Victim ~= nil then	
+                Camera.CFrame = CFrame.new(Camera.CFrame.p, Victim.Character[getgenv().AimPart].Position + Victim.Character[getgenv().AimPart].Velocity*getgenv().Prediction)	
+            end	
+        end	
+      end)	
+      while wait() do
+            if getgenv().AutoPrediction == true then	
+            local pingvalue = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()	
+            local split = string.split(pingvalue,'(')	
+      local ping = tonumber(split[1])	
+      if ping < 225 then	
+      getgenv().Prediction = 1.4	
+      elseif ping < 215 then	
+      getgenv().Prediction = 1.2	
+      elseif ping < 205 then
+      getgenv().Prediction = 1.0	
+      elseif ping < 190 then
+      getgenv().Prediction = 0.10	
+      elseif ping < 180 then	
+      getgenv().Prediction = 0.12	
+      elseif ping < 170 then
+      getgenv().Prediction = 0.15	
+      elseif ping < 160 then
+      getgenv().Prediction = 0.18	
+      elseif ping < 150 then
+      getgenv().Prediction = 0.110	
+      elseif ping < 140 then	
+      getgenv().Prediction = 0.113	
+      elseif ping < 130 then	
+      getgenv().Prediction = 0.116	
+      elseif ping < 120 then	
+      getgenv().Prediction = 0.120	
+      elseif ping < 110 then	
+      getgenv().Prediction = 0.124	
+      elseif ping < 105 then	
+      getgenv().Prediction = 0.127	
+      elseif ping < 90 then	
+      getgenv().Prediction = 0.130	
+      elseif ping < 80 then	
+      getgenv().Prediction = 0.133	
+      elseif ping < 70 then	
+      getgenv().Prediction = 0.136	
+      elseif ping < 60 then	
+      getgenv().Prediction = 0.140	
+      elseif ping < 50 then	
+      getgenv().Prediction = 0.143	
+      elseif ping < 40 then	
+      getgenv().Prediction = 0.145	
+      elseif ping < 30 then	
+      getgenv().Prediction = 0.155	
+      elseif ping < 20 then	
+      getgenv().Prediction = 0.157	
+            end	
+            end	
+      end 
+          end    
+    })
+    
+    AimingT:AddButton({
+        Name = "Legit Streamable 60-70",
+        Callback = function()
+            loadstring(game:HttpGet("https://pastebin.com/raw/SbtCNZg7"))()
+            DaHoodSettings.Prediction = 0.147106
+            Aiming.TargetPart = {"Head", "UpperTorso", "LowerTorso", "RightFoot", "LeftFoot"}
+            Aiming.FOV = 8
+            Aiming.FOVSideTs = 8
+            Aiming.HitChance = 139
+          end    
+    })
+    
+    AimingT:AddButton({
+        Name = "VoidX(Q) 60-70",
+        Callback = function()
+           
+    -- main aimlock settings
+    local configs = {
+        main = {
+            enabled = true,
+            aimlockkey = "q",
+            prediction = 0.147106,
+            aimpart = 'HumanoidRootPart', -- Head, UpperTorso, HumanoidRootPart, LowerTorso
+            notifications = true
+        }
+    }
+    
+    -- box / marker settings
+    
+    local boxsettings = {
+        box = {
+            Showbox = true,
+    
+            boxsize = Vector3.new(3.3, 3, 2.8), -- Box Size
+            markercolor = Color3.fromRGB(0, 0, 0), -- Marrker Color
+            markersize = UDim2.new(1, 0, 3, 0) -- Marker Size
+        }
+    }
+    
+    -- dont mess with anything below
+    local box = Instance.new("Part", game.Workspace)
+    
+    local Mouse = game.Players.LocalPlayer:GetMouse()
+    
+    function makemarker(Parent, Adornee, Color, Size, Size2)
+        local box = Instance.new("BillboardGui", Parent)
+        box.Name = "PRIVATE-REWRITE!"
+        box.Adornee = Adornee
+        box.Size = UDim2.new(Size, Size2, Size, Size2)
+        box.AlwaysOnTop = true
+    
+        local a = Instance.new("Frame", box)
+        a.Size = boxsettings.box.markersize
+        a.BackgroundColor3 = Color
+    
+        local g = Instance.new("UICorner", a)
+        g.CornerRadius = UDim.new(50, 25)
+        return (box)
+    end
+    
+    local Plr
+    Mouse.KeyDown:Connect(function(KeyPressed)
+        if KeyPressed == (configs.main.aimlockkey) then
+            if configs.main.enabled == true then
+                configs.main.enabled = false
+                if configs.main.notifications == true then
+                    Plr = FindClosestUser()
+                    game.StarterGui:SetCore("SendNotification", {
+                        Title = "VoidX.privat",
+                        Text = "Unlocked;"
+                    })
+                end
+            else
+                Plr = FindClosestUser()
+                configs.main.enabled = true
+                if configs.main.notifications == true then
+                    game.StarterGui:SetCore("SendNotification", {
+                        Title = "VoidX.privat",
+                        Text = "Locked On;  " .. tostring(Plr.Character.Humanoid.DisplayName)
+                    })
+                end
+            end
+        end
+    end)
+    
+    local data = game.Players:GetPlayers()
+    function noob(player)
+        local character
+        repeat
+            wait()
+        until player.Character
+        local handler = makemarker(guimain, player.Character:WaitForChild(configs.main.aimpart),
+            Color3.fromRGB(255,255,255), 0.10, 8)
+        handler.Name = player.Name
+        player.CharacterAdded:connect(function(Char)
+            handler.Adornee = Char:WaitForChild("HumanoidRootPart")
+        end)
+    end
+    
+    for i = 1, #data do
+        if data[i] ~= game.Players.LocalPlayer then
+            noob(data[i])
+        end
+    end
+    
+    game.Players.PlayerAdded:connect(function(Player)
+        noob(Player)
+    end)
+    
+    spawn(function()
+        box.Anchored = true
+        box.CanCollide = false
+        box.Size = boxsettings.box.boxsize
+        if boxsettings.box.Showbox == true then
+            box.Transparency = 0
+        else
+            box.Transparency = 1
+        end
+        makemarker(box, box, boxsettings.box.markercolor, 0.40, 1)
+    end)
+    
+    function FindClosestUser()
+        local closestPlayer
+        local ShortestDistance = 300
+    
+        for i, v in pairs(game.Players:GetPlayers()) do
+            if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and
+                v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") then
+                local pos = game:GetService "Workspace".CurrentCamera:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+                local magnitude = (Vector2.new(pos.X, pos.Y) -
+                                      Vector2.new(game.Players.LocalPlayer:GetMouse().X,
+                        game.Players.LocalPlayer:GetMouse().Y)).magnitude
+                if magnitude < ShortestDistance then
+                    closestPlayer = v
+                    ShortestDistance = magnitude
+                end
+            end
+        end
+        return closestPlayer
+    end
+    
+    game:GetService "RunService".Stepped:connect(function()
+        if configs.main.enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
+            box.CFrame = CFrame.new(Plr.Character[configs.main.aimpart].Position +
+                                        (Plr.Character.UpperTorso.Velocity * configs.main.prediction))
+        else
+            box.CFrame = CFrame.new(0, 9999, 0)
+        end
+    end)
+    
+    repeat
+        wait()
+    until game:IsLoaded()
+    local mt = getrawmetatable(game)
+    local old = mt.__namecall
+    setreadonly(mt, false)
+    mt.__namecall = newcclosure(function(...)
+        local args = {...}
+        if configs.main.enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
+            args[3] = Plr.Character[configs.main.aimpart].Position +
+                          (Plr.Character[configs.main.aimpart].Velocity * configs.main.prediction)
+            return old(unpack(args))
+        end
+        return old(...)
+    end)
+          end    
+    })
+    
+    AimingT:AddButton({
+        Name = "Private Lock(Q) 60-70",
+        Callback = function()
+     -- main aimlock settings
+     local configs = {
+        main = {
+            enabled = true,
+            aimlockkey = "q",
+            prediction = 0.147106,
+            aimpart = 'HumanoidRootPart', -- Head, UpperTorso, HumanoidRootPart, LowerTorso
+            notifications = true
+        }
+      }
+      
+      -- box / marker settings
+      
+      local boxsettings = {
+        box = {
+            Showbox = true,
+      
+            boxsize = Vector3.new(3.3, 3, 2.8), -- Box Size
+            markercolor = Color3.fromRGB(1, 120, 145), -- Marrker Color
+            markersize = UDim2.new(1, 0, 3, 0) -- Marker Size
+        }
+      }
+      
+      -- dont mess with anything below
+      local box = Instance.new("Part", game.Workspace)
+      
+      local Mouse = game.Players.LocalPlayer:GetMouse()
+      
+      function makemarker(Parent, Adornee, Color, Size, Size2)
+        local box = Instance.new("BillboardGui", Parent)
+        box.Name = "PRIVATE-REWRITE!"
+        box.Adornee = Adornee
+        box.Size = UDim2.new(Size, Size2, Size, Size2)
+        box.AlwaysOnTop = true
+      
+        local a = Instance.new("Frame", box)
+        a.Size = boxsettings.box.markersize
+        a.BackgroundColor3 = Color
+      
+        local g = Instance.new("UICorner", a)
+        g.CornerRadius = UDim.new(50, 25)
+        return (box)
+      end
+      
+      local Plr
+      Mouse.KeyDown:Connect(function(KeyPressed)
+        if KeyPressed == (configs.main.aimlockkey) then
+            if configs.main.enabled == true then
+                configs.main.enabled = false
+                if configs.main.notifications == true then
+                    Plr = FindClosestUser()
+                    game.StarterGui:SetCore("SendNotification", {
+                        Title = "Private",
+                        Text = "Unlocked;"
+                    })
+                end
+            else
+                Plr = FindClosestUser()
+                configs.main.enabled = true
+                if configs.main.notifications == true then
+                    game.StarterGui:SetCore("SendNotification", {
+                        Title = "Private",
+                        Text = "Locked On;  " .. tostring(Plr.Character.Humanoid.DisplayName)
+                    })
+                end
+            end
+        end
+      end)
+      
+      local data = game.Players:GetPlayers()
+      function noob(player)
+        local character
+        repeat
+            wait()
+        until player.Character
+        local handler = makemarker(guimain, player.Character:WaitForChild(configs.main.aimpart),
+            Color3.fromRGB(107, 184, 255), 0.10, 8)
+        handler.Name = player.Name
+        player.CharacterAdded:connect(function(Char)
+            handler.Adornee = Char:WaitForChild("HumanoidRootPart")
+        end)
+      end
+      
+      for i = 1, #data do
+        if data[i] ~= game.Players.LocalPlayer then
+            noob(data[i])
+        end
+      end
+      
+      game.Players.PlayerAdded:connect(function(Player)
+        noob(Player)
+      end)
+      
+      spawn(function()
+        box.Anchored = true
+        box.CanCollide = false
+        box.Size = boxsettings.box.boxsize
+        if boxsettings.box.Showbox == true then
+            box.Transparency = 0.70
+        else
+            box.Transparency = 1
+        end
+        makemarker(box, box, boxsettings.box.markercolor, 0.40, 1)
+      end)
+      
+      function FindClosestUser()
+        local closestPlayer
+        local ShortestDistance = 300
+      
+        for i, v in pairs(game.Players:GetPlayers()) do
+            if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and
+                v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") then
+                local pos = game:GetService "Workspace".CurrentCamera:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+                local magnitude = (Vector2.new(pos.X, pos.Y) -
+                                      Vector2.new(game.Players.LocalPlayer:GetMouse().X,
+                        game.Players.LocalPlayer:GetMouse().Y)).magnitude
+                if magnitude < ShortestDistance then
+                    closestPlayer = v
+                    ShortestDistance = magnitude
+                end
+            end
+        end
+        return closestPlayer
+      end
+      
+      game:GetService "RunService".Stepped:connect(function()
+        if configs.main.enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
+            box.CFrame = CFrame.new(Plr.Character[configs.main.aimpart].Position +
+                                        (Plr.Character.UpperTorso.Velocity * configs.main.prediction))
+        else
+            box.CFrame = CFrame.new(0, 9999, 0)
+        end
+      end)
+      
+      repeat
+        wait()
+      until game:IsLoaded()
+      local mt = getrawmetatable(game)
+      local old = mt.__namecall
+      setreadonly(mt, false)
+      mt.__namecall = newcclosure(function(...)
+        local args = {...}
+        if configs.main.enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
+            args[3] = Plr.Character[configs.main.aimpart].Position +
+                          (Plr.Character[configs.main.aimpart].Velocity * configs.main.prediction)
+            return old(unpack(args))
+        end
+        return old(...)
+      end)
+          end    
+    })
+    
+    AimingT:AddButton({
+        Name = "Best Lock(Q) 60-70",
+        Callback = function()
+      --[[
+    
+    ██╗  ██╗ █████╗ ██████╗ ██╗    ██╗    ██╗
+    ██║ ██╔╝██╔══██╗██╔══██╗██║    ██║    ██║
+    █████╔╝ ███████║██████╔╝██║    ██║ █╗ ██║
+    ██╔═██╗ ██╔══██║██╔══██╗██║    ██║███╗██║
+    ██║  ██╗██║  ██║██║  ██║██████╗╚███╔███╔╝
+    ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══╝╚══╝ 
+    
+    --]]
+    
+    --dont mess with he settings unless u know what ur doing
+    
+    local Settings = {
+        rewrittenmain = {
+            Enabled = true,
+            Key = "q",
+            DOT = true,
+            AIRSHOT = true,
+            NOTIF = true, 
+            AUTOPRED = false, 
+            FOV = math.huge,
+            RESOVLER = false 
+        }
+      }
+      
+      local SelectedPart = "UpperTorso"                              
+      local Prediction = true
+      local PredictionValue = 0.147106                           
+      
+      
+        local AnchorCount = 0
+        local MaxAnchor = 50
+      
+        local CC = game:GetService"Workspace".CurrentCamera
+        local Plr;
+        local enabled = false
+        local accomidationfactor = 0.12348
+        local mouse = game.Players.LocalPlayer:GetMouse()
+        local placemarker = Instance.new("Part", game.Workspace)
+      
+        function makemarker(Parent, Adornee, Color, Size, Size2)
+            local e = Instance.new("BillboardGui", Parent)
+            e.Name = "PP"
+            e.Adornee = Adornee
+            e.Size = UDim2.new(Size, Size2, Size, Size2)
+            e.AlwaysOnTop = Settings.rewrittenmain.DOT
+            local a = Instance.new("Frame", e)
+            if Settings.rewrittenmain.DOT == true then
+            a.Size = UDim2.new(2, 2, 2)
+            else
+            a.Size = UDim2.new(0, 0, 0, 0)
+            end
+            if Settings.rewrittenmain.DOT == true then
+            a.Transparency = 0
+            a.BackgroundTransparency = 0
+            else
+            a.Transparency = 1
+            a.BackgroundTransparency = 1
+            end
+            a.BackgroundColor3 = Color
+            local g = Instance.new("UICorner", a)
+            if Settings.rewrittenmain.DOT == false then
+            g.CornerRadius = UDim.new(0, 0)
+            else
+            g.CornerRadius = UDim.new(1, 1)
+            end
+            return(e)
+        end
+      
+        
+        local data = game.Players:GetPlayers()
+        function noob(player)
+            local character
+            repeat wait() until player.Character
+            local handler = makemarker(guimain, player.Character:WaitForChild(SelectedPart), Color3.fromRGB(68, 214, 44), 0.3, 3)
+            handler.Name = player.Name
+            player.CharacterAdded:connect(function(Char) handler.Adornee = Char:WaitForChild(SelectedPart) end)
+      
+      
+            spawn(function()                                    
+                while wait() do                                     
+                    if player.Character then                                    
+                    end                                    
+                end                                     
+            end)                                    
+        end                                    
+      
+        for i = 1, #data do
+            if data[i] ~= game.Players.LocalPlayer then
+                noob(data[i])
+            end
+        end
+      
+        game.Players.PlayerAdded:connect(function(Player)
+            noob(Player)
+        end)
+      
+        spawn(function()
+            placemarker.Anchored = true
+            placemarker.CanCollide = false
+            if Settings.rewrittenmain.DOT == true then
+            placemarker.Size = Vector3.new(6, 6, 6)
+            else
+            placemarker.Size = Vector3.new(0, 0, 0)
+            end
+            placemarker.Transparency = 1
+            if Settings.rewrittenmain.DOT then
+            makemarker(placemarker, placemarker, Color3.fromRGB(68, 214, 44), 0.40, 0)
+            end
+        end)
+      
+        game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(k)
+            if k == Settings.rewrittenmain.Key and Settings.rewrittenmain.Enabled then
+                if enabled == true then
+                    enabled = false
+                    if Settings.rewrittenmain.NOTIF == true then
+                        Plr = getClosestPlayerToCursor()
+                    game.StarterGui:SetCore("SendNotification", {
+                Title = "Lock Notification",
+                Text = "Unlocked",
+                Icon = "",
+                Duration = 1,
+      })
+                end
+                else
+                    Plr = getClosestPlayerToCursor()
+                    enabled = true
+                    if Settings.rewrittenmain.NOTIF == true then
+      
+                        game.StarterGui:SetCore("SendNotification", {
+                Title = "Lock Notification",
+                Text = "Locked On :"..tostring(Plr.Name); 
+                Icon = "",
+                Duration = 1,
+      })
+      
+                    end
+                end
+            end
+        end)
+      
+      
+      
+        function getClosestPlayerToCursor()
+            local closestPlayer
+            local shortestDistance = Settings.rewrittenmain.FOV
+      
+            for i, v in pairs(game.Players:GetPlayers()) do
+                if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") then
+                    local pos = CC:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+                    local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
+                    if magnitude < shortestDistance then
+                        closestPlayer = v
+                        shortestDistance = magnitude
+                    end
+                end
+            end
+            return closestPlayer
+        end
+      
+        local pingvalue = nil;
+        local split = nil;
+        local ping = nil;
+      
+        game:GetService"RunService".Stepped:connect(function()
+            if enabled and Plr.Character ~= nil and Plr.Character:FindFirstChild("HumanoidRootPart") then
+                placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor))
+            else
+                placemarker.CFrame = CFrame.new(0, 9999, 0)
+            end
+            if Settings.rewrittenmain.AUTOPRED == true then
+                 pingvalue = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+                 split = string.split(pingvalue,'(')
+                 ping = tonumber(split[1])
+                if ping < 130 then
+                    PredictionValue = 0.151
+                elseif ping < 125 then
+                    PredictionValue = 0.149
+                elseif ping < 110 then
+                    PredictionValue = 0.146
+                elseif ping < 105 then
+                    PredictionValue = 0.138
+                elseif ping < 90 then
+                    PredictionValue = 0.136
+                elseif ping < 80 then
+                    PredictionValue = 0.134
+                elseif ping < 70 then
+                    PredictionValue = 0.131
+                elseif ping < 60 then
+                    PredictionValue = 0.1229
+                elseif ping < 50 then
+                    PredictionValue = 0.1225
+                elseif ping < 40 then
+                    PredictionValue = 0.1256
+                end
+            end
+        end)
+      
+        local mt = getrawmetatable(game)
+        local old = mt.__namecall
+        setreadonly(mt, false)
+        mt.__namecall = newcclosure(function(...)
+            local args = {...}
+            if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" and Settings.rewrittenmain.Enabled and Plr.Character ~= nil then
+      
+                -- args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor)
+                --[[
+                if Settings.rewrittenmain.AIRSHOT == true then
+                    if game.Workspace.Players[Plr.Name].Humanoid:GetState() == Enum.HumanoidStateType.Freefall then -- Plr.Character:WaitForChild("Humanoid"):GetState() == Enum.HumanoidStateType.Freefall
+                        
+                        --// Airshot
+                        args[3] = Plr.Character.LeftFoot.Position+(Plr.Character.LeftFoot.Velocity*PredictionValue)
+                    else
+                        args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*PredictionValue)
+                    end
+                else
+                        args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*PredictionValue)
+                end
+                ]]
+                if Prediction == true then
+                    
+                args[3] = Plr.Character[SelectedPart].Position+(Plr.Character[SelectedPart].Velocity*PredictionValue)
+      
+                else
+      
+                args[3] = Plr.Character[SelectedPart].Position
+      
+                end
+      
+                return old(unpack(args))
+            end
+            return old(...)
+        end)
+      
+        game:GetService("RunService").RenderStepped:Connect(function()
+            if Settings.rewrittenmain.RESOVLER == true and Plr.Character ~= nil and enabled and Settings.rewrittenmain.Enabled then
+            if Settings.rewrittenmain.AIRSHOT == true and enabled and Plr.Character ~= nil then
+                
+                if game.Workspace.Players[Plr.Name].Humanoid:GetState() == Enum.HumanoidStateType.Freefall then -- Plr.Character:WaitForChild("Humanoid"):GetState() == Enum.HumanoidStateType.Freefall
+                    
+                    --// Airshot
+      
+                    --// Anchor Check
+      
+                    if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                        AnchorCount = AnchorCount + 1
+                        if AnchorCount >= MaxAnchor then
+                            Prediction = false
+                            wait(2)
+                            AnchorCount = 0;
+                        end
+                    else
+                        Prediction = true
+                        AnchorCount = 0;
+                    end
+      
+                    SelectedPart = "HumanoidRootPart"
+      
+                else
+                    --// Anchor Check
+      
+                    if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                        AnchorCount = AnchorCount + 1
+                        if AnchorCount >= MaxAnchor then
+                            Prediction = false
+                            wait(2)
+                            AnchorCount = 0;
+                        end
+                    else
+                        Prediction = true
+                        AnchorCount = 0;
+                    end
+      
+                    SelectedPart = "HumanoidRootPart"
+      
+                end
+                else
+      
+                    --// Anchor Check
+      
+                    if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                        AnchorCount = AnchorCount + 1
+                        if AnchorCount >= MaxAnchor then
+                            Prediction = false
+                            wait(2)
+                            AnchorCount = 0;
+                        end
+                    else
+                        Prediction = true
+                        AnchorCount = 0;
+                    end
+      
+                    SelectedPart = "HumanoidRootPart"
+                end
+      
+            else
+                    SelectedPart = "HumanoidRootPart"
+            end
+        end)
+      
+      --the cam lock
+      
+      getgenv().Prediction = 0.143105125985120958176	
+      getgenv().AimPart = "UpperTorso"	
+      getgenv().Key = "Q"	
+      getgenv().DisableKey = "P"	
+      
+      getgenv().FOV = true	
+      getgenv().ShowFOV = false	
+      getgenv().FOVSize = 55	
+      
+      --// Variables (Service)	
+      
+      local Players = game:GetService("Players")	
+      local RS = game:GetService("RunService")	
+      local WS = game:GetService("Workspace")	
+      local GS = game:GetService("GuiService")	
+      local SG = game:GetService("StarterGui")	
+      
+      --// Variables (regular)	
+      
+      local LP = Players.LocalPlayer	
+      local Mouse = LP:GetMouse()	
+      local Camera = WS.CurrentCamera	
+      local GetGuiInset = GS.GetGuiInset	
+      
+      local AimlockState = true	
+      local Locked	
+      local Victim	
+      
+      local SelectedKey = getgenv().Key	
+      local SelectedDisableKey = getgenv().DisableKey	
+        
+      --// Check if aimlock is loaded	
+      
+      if getgenv().Loaded == true then	
+        Notify("Aimlock is already loaded!")	
+        return	
+      end	
+      
+      getgenv().Loaded = true	
+      
+      --// FOV Circle	
+      
+      local fov = Drawing.new("Circle")	
+      fov.Filled = false	
+      fov.Transparency = 1	
+      fov.Thickness = 1	
+      fov.Color = Color3.fromRGB(255, 255, 0)	
+      fov.NumSideTs = 1000	
+      
+      --// Functions	
+      
+      function update()	
+        if getgenv().FOV == true then	
+            if fov then	
+      fov.Radius = getgenv().FOVSize * 2	
+                fov.Visible = getgenv().ShowFOV	
+      fov.Position = Vector2.new(Mouse.X, Mouse.Y + GetGuiInset(GS).Y)	
+      
+                return fov	
+            end	
+        end	
+      end	
+      
+      function WTVP(arg)	
+        return Camera:WorldToViewportPoint(arg)	
+      end	
+      
+      function WTSP(arg)	
+        return Camera.WorldToScreenPoint(Camera, arg)	
+      end	
+      
+      function getClosest()	
+        local closestPlayer	
+        local shortestDistance = math.huge	
+      
+        for i, v in pairs(game.Players:GetPlayers()) do	
+            local notKO = v.Character:WaitForChild("BodyEffects")["K.O"].Value ~= true	
+            local notGrabbed = v.Character:FindFirstChild("GRABBING_COINSTRAINT") == nil	
+              
+      if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild(getgenv().AimPart) and notKO and notGrabbed then	
+                local pos = Camera:WorldToViewportPoint(v.Character.PrimaryPart.Position)	
+      local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(Mouse.X, Mouse.Y)).magnitude	
+                  
+                if (getgenv().FOV) then	
+                    if (fov.Radius > magnitude and magnitude < shortestDistance) then	
+                        closestPlayer = v	
+                        shortestDistance = magnitude	
+                    end	
+                else	
+                    if (magnitude < shortestDistance) then	
+                        closestPlayer = v	
+                        shortestDistance = magnitude	
+                    end	
+                end	
+            end	
+        end	
+        return closestPlayer	
+      end	
+      
+      --// Checks if key is down	
+      
+      Mouse.KeyDown:Connect(function(k)	
+        SelectedKey = SelectedKey:lower()	
+        SelectedDisableKey = SelectedDisableKey:lower()	
+        if k == SelectedKey then	
+            if AimlockState == true then	
+                Locked = not Locked	
+                if Locked then	
+                    Victim = getClosest()	
+      
+                    Notify("Locked onto: "..tostring(Victim.Character.Humanoid.DisplayName))	
+                else	
+                    if Victim ~= nil then	
+                        Victim = nil	
+      
+                        Notify("Unlocked!")	
+                    end	
+                end	
+            else	
+                Notify("Aimlock is not enabled!")	
+            end	
+        end	
+        if k == SelectedDisableKey then	
+            AimlockState = not AimlockState	
+        end	
+      end)	
+      
+      --// Loop update FOV and loop camera lock onto target	
+      
+      RS.RenderStepped:Connect(function()	
+        update()	
+        if AimlockState == true then	
+            if Victim ~= nil then	
+                Camera.CFrame = CFrame.new(Camera.CFrame.p, Victim.Character[getgenv().AimPart].Position + Victim.Character[getgenv().AimPart].Velocity*getgenv().Prediction)	
+            end	
+        end	
+      end)	
+      while wait() do
+            if getgenv().AutoPrediction == true then	
+            local pingvalue = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()	
+            local split = string.split(pingvalue,'(')	
+      local ping = tonumber(split[1])	
+      if ping < 225 then	
+      getgenv().Prediction = 1.4	
+      elseif ping < 215 then	
+      getgenv().Prediction = 1.2	
+      elseif ping < 205 then
+      getgenv().Prediction = 1.0	
+      elseif ping < 190 then
+      getgenv().Prediction = 0.10	
+      elseif ping < 180 then	
+      getgenv().Prediction = 0.12	
+      elseif ping < 170 then
+      getgenv().Prediction = 0.15	
+      elseif ping < 160 then
+      getgenv().Prediction = 0.18	
+      elseif ping < 150 then
+      getgenv().Prediction = 0.110	
+      elseif ping < 140 then	
+      getgenv().Prediction = 0.113	
+      elseif ping < 130 then	
+      getgenv().Prediction = 0.116	
+      elseif ping < 120 then	
+      getgenv().Prediction = 0.120	
+      elseif ping < 110 then	
+      getgenv().Prediction = 0.124	
+      elseif ping < 105 then	
+      getgenv().Prediction = 0.127	
+      elseif ping < 90 then	
+      getgenv().Prediction = 0.130	
+      elseif ping < 80 then	
+      getgenv().Prediction = 0.133	
+      elseif ping < 70 then	
+      getgenv().Prediction = 0.136	
+      elseif ping < 60 then	
+      getgenv().Prediction = 0.140	
+      elseif ping < 50 then	
+      getgenv().Prediction = 0.143	
+      elseif ping < 40 then	
+      getgenv().Prediction = 0.145	
+      elseif ping < 30 then	
+      getgenv().Prediction = 0.155	
+      elseif ping < 20 then	
+      getgenv().Prediction = 0.157	
+            end	
+            end	
+      end 
+          end    
+    })
+    
+    AimingT:AddButton({
+        Name = "Legit Streamable 70-90",
+        Callback = function()
+            loadstring(game:HttpGet("https://pastebin.com/raw/SbtCNZg7"))()
+            DaHoodSettings.Prediction = 0.13772123
+            Aiming.TargetPart = {"Head", "UpperTorso", "LowerTorso", "RightFoot", "LeftFoot"}
+            Aiming.FOV = 8
+            Aiming.FOVSideTs = 8
+            Aiming.HitChance = 139
+          end    
+    })
+    
+    AimingT:AddButton({
+        Name = "VoidX(Q) 70-90",
+        Callback = function()
+            Callback = function()
+           
+                -- main aimlock settings
+                local configs = {
+                    main = {
+                        enabled = true,
+                        aimlockkey = "q",
+                        prediction = 0.13772123,
+                        aimpart = 'HumanoidRootPart', -- Head, UpperTorso, HumanoidRootPart, LowerTorso
+                        notifications = true
+                    }
+                }
+                
+                -- box / marker settings
+                
+                local boxsettings = {
+                    box = {
+                        Showbox = true,
+                
+                        boxsize = Vector3.new(3.3, 3, 2.8), -- Box Size
+                        markercolor = Color3.fromRGB(0, 0, 0), -- Marrker Color
+                        markersize = UDim2.new(1, 0, 3, 0) -- Marker Size
+                    }
+                }
+                
+                -- dont mess with anything below
+                local box = Instance.new("Part", game.Workspace)
+                
+                local Mouse = game.Players.LocalPlayer:GetMouse()
+                
+                function makemarker(Parent, Adornee, Color, Size, Size2)
+                    local box = Instance.new("BillboardGui", Parent)
+                    box.Name = "PRIVATE-REWRITE!"
+                    box.Adornee = Adornee
+                    box.Size = UDim2.new(Size, Size2, Size, Size2)
+                    box.AlwaysOnTop = true
+                
+                    local a = Instance.new("Frame", box)
+                    a.Size = boxsettings.box.markersize
+                    a.BackgroundColor3 = Color
+                
+                    local g = Instance.new("UICorner", a)
+                    g.CornerRadius = UDim.new(50, 25)
+                    return (box)
+                end
+                
+                local Plr
+                Mouse.KeyDown:Connect(function(KeyPressed)
+                    if KeyPressed == (configs.main.aimlockkey) then
+                        if configs.main.enabled == true then
+                            configs.main.enabled = false
+                            if configs.main.notifications == true then
+                                Plr = FindClosestUser()
+                                game.StarterGui:SetCore("SendNotification", {
+                                    Title = "VoidX.privat",
+                                    Text = "Unlocked;"
+                                })
+                            end
+                        else
+                            Plr = FindClosestUser()
+                            configs.main.enabled = true
+                            if configs.main.notifications == true then
+                                game.StarterGui:SetCore("SendNotification", {
+                                    Title = "VoidX.privat",
+                                    Text = "Locked On;  " .. tostring(Plr.Character.Humanoid.DisplayName)
+                                })
+                            end
+                        end
+                    end
+                end)
+                
+                local data = game.Players:GetPlayers()
+                function noob(player)
+                    local character
+                    repeat
+                        wait()
+                    until player.Character
+                    local handler = makemarker(guimain, player.Character:WaitForChild(configs.main.aimpart),
+                        Color3.fromRGB(255,255,255), 0.10, 8)
+                    handler.Name = player.Name
+                    player.CharacterAdded:connect(function(Char)
+                        handler.Adornee = Char:WaitForChild("HumanoidRootPart")
+                    end)
+                end
+                
+                for i = 1, #data do
+                    if data[i] ~= game.Players.LocalPlayer then
+                        noob(data[i])
+                    end
+                end
+                
+                game.Players.PlayerAdded:connect(function(Player)
+                    noob(Player)
+                end)
+                
+                spawn(function()
+                    box.Anchored = true
+                    box.CanCollide = false
+                    box.Size = boxsettings.box.boxsize
+                    if boxsettings.box.Showbox == true then
+                        box.Transparency = 0
+                    else
+                        box.Transparency = 1
+                    end
+                    makemarker(box, box, boxsettings.box.markercolor, 0.40, 1)
+                end)
+                
+                function FindClosestUser()
+                    local closestPlayer
+                    local ShortestDistance = 300
+                
+                    for i, v in pairs(game.Players:GetPlayers()) do
+                        if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and
+                            v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") then
+                            local pos = game:GetService "Workspace".CurrentCamera:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+                            local magnitude = (Vector2.new(pos.X, pos.Y) -
+                                                  Vector2.new(game.Players.LocalPlayer:GetMouse().X,
+                                    game.Players.LocalPlayer:GetMouse().Y)).magnitude
+                            if magnitude < ShortestDistance then
+                                closestPlayer = v
+                                ShortestDistance = magnitude
+                            end
+                        end
+                    end
+                    return closestPlayer
+                end
+                
+                game:GetService "RunService".Stepped:connect(function()
+                    if configs.main.enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
+                        box.CFrame = CFrame.new(Plr.Character[configs.main.aimpart].Position +
+                                                    (Plr.Character.UpperTorso.Velocity * configs.main.prediction))
+                    else
+                        box.CFrame = CFrame.new(0, 9999, 0)
+                    end
+                end)
+                
+                repeat
+                    wait()
+                until game:IsLoaded()
+                local mt = getrawmetatable(game)
+                local old = mt.__namecall
+                setreadonly(mt, false)
+                mt.__namecall = newcclosure(function(...)
+                    local args = {...}
+                    if configs.main.enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
+                        args[3] = Plr.Character[configs.main.aimpart].Position +
+                                      (Plr.Character[configs.main.aimpart].Velocity * configs.main.prediction)
+                        return old(unpack(args))
+                    end
+                    return old(...)
+                end)
+            end   
+      end
+    })
+    
+    AimingT:AddButton({
+        Name = "Private Lock(Q) 70-90",
+        Callback = function()
+                -- main aimlock settings
+                local configs = {
+                   main = {
+                       enabled = true,
+                       aimlockkey = "q",
+                       prediction = 0.13772123,
+                       aimpart = 'HumanoidRootPart', -- Head, UpperTorso, HumanoidRootPart, LowerTorso
+                       notifications = true
+                   }
+                 }
+                 
+                 -- box / marker settings
+                 
+                 local boxsettings = {
+                   box = {
+                       Showbox = true,
+                 
+                       boxsize = Vector3.new(3.3, 3, 2.8), -- Box Size
+                       markercolor = Color3.fromRGB(1, 120, 145), -- Marrker Color
+                       markersize = UDim2.new(1, 0, 3, 0) -- Marker Size
+                   }
+                 }
+                 
+                 -- dont mess with anything below
+                 local box = Instance.new("Part", game.Workspace)
+                 
+                 local Mouse = game.Players.LocalPlayer:GetMouse()
+                 
+                 function makemarker(Parent, Adornee, Color, Size, Size2)
+                   local box = Instance.new("BillboardGui", Parent)
+                   box.Name = "PRIVATE-REWRITE!"
+                   box.Adornee = Adornee
+                   box.Size = UDim2.new(Size, Size2, Size, Size2)
+                   box.AlwaysOnTop = true
+                 
+                   local a = Instance.new("Frame", box)
+                   a.Size = boxsettings.box.markersize
+                   a.BackgroundColor3 = Color
+                 
+                   local g = Instance.new("UICorner", a)
+                   g.CornerRadius = UDim.new(50, 25)
+                   return (box)
+                 end
+                 
+                 local Plr
+                 Mouse.KeyDown:Connect(function(KeyPressed)
+                   if KeyPressed == (configs.main.aimlockkey) then
+                       if configs.main.enabled == true then
+                           configs.main.enabled = false
+                           if configs.main.notifications == true then
+                               Plr = FindClosestUser()
+                               game.StarterGui:SetCore("SendNotification", {
+                                   Title = "Private",
+                                   Text = "Unlocked;"
+                               })
+                           end
+                       else
+                           Plr = FindClosestUser()
+                           configs.main.enabled = true
+                           if configs.main.notifications == true then
+                               game.StarterGui:SetCore("SendNotification", {
+                                   Title = "Private",
+                                   Text = "Locked On;  " .. tostring(Plr.Character.Humanoid.DisplayName)
+                               })
+                           end
+                       end
+                   end
+                 end)
+                 
+                 local data = game.Players:GetPlayers()
+                 function noob(player)
+                   local character
+                   repeat
+                       wait()
+                   until player.Character
+                   local handler = makemarker(guimain, player.Character:WaitForChild(configs.main.aimpart),
+                       Color3.fromRGB(107, 184, 255), 0.10, 8)
+                   handler.Name = player.Name
+                   player.CharacterAdded:connect(function(Char)
+                       handler.Adornee = Char:WaitForChild("HumanoidRootPart")
+                   end)
+                 end
+                 
+                 for i = 1, #data do
+                   if data[i] ~= game.Players.LocalPlayer then
+                       noob(data[i])
+                   end
+                 end
+                 
+                 game.Players.PlayerAdded:connect(function(Player)
+                   noob(Player)
+                 end)
+                 
+                 spawn(function()
+                   box.Anchored = true
+                   box.CanCollide = false
+                   box.Size = boxsettings.box.boxsize
+                   if boxsettings.box.Showbox == true then
+                       box.Transparency = 0.70
+                   else
+                       box.Transparency = 1
+                   end
+                   makemarker(box, box, boxsettings.box.markercolor, 0.40, 1)
+                 end)
+                 
+                 function FindClosestUser()
+                   local closestPlayer
+                   local ShortestDistance = 300
+                 
+                   for i, v in pairs(game.Players:GetPlayers()) do
+                       if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and
+                           v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") then
+                           local pos = game:GetService "Workspace".CurrentCamera:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+                           local magnitude = (Vector2.new(pos.X, pos.Y) -
+                                                 Vector2.new(game.Players.LocalPlayer:GetMouse().X,
+                                   game.Players.LocalPlayer:GetMouse().Y)).magnitude
+                           if magnitude < ShortestDistance then
+                               closestPlayer = v
+                               ShortestDistance = magnitude
+                           end
+                       end
+                   end
+                   return closestPlayer
+                 end
+                 
+                 game:GetService "RunService".Stepped:connect(function()
+                   if configs.main.enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
+                       box.CFrame = CFrame.new(Plr.Character[configs.main.aimpart].Position +
+                                                   (Plr.Character.UpperTorso.Velocity * configs.main.prediction))
+                   else
+                       box.CFrame = CFrame.new(0, 9999, 0)
+                   end
+                 end)
+                 
+                 repeat
+                   wait()
+                 until game:IsLoaded()
+                 local mt = getrawmetatable(game)
+                 local old = mt.__namecall
+                 setreadonly(mt, false)
+                 mt.__namecall = newcclosure(function(...)
+                   local args = {...}
+                   if configs.main.enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
+                       args[3] = Plr.Character[configs.main.aimpart].Position +
+                                     (Plr.Character[configs.main.aimpart].Velocity * configs.main.prediction)
+                       return old(unpack(args))
+                   end
+                   return old(...)
+                 end)
+          end    
+    })
+    
+    AimingT:AddButton({
+        Name = "Best Lock(Q) 70-90",
+        Callback = function()
+      --[[
+    
+    ██╗  ██╗ █████╗ ██████╗ ██╗    ██╗    ██╗
+    ██║ ██╔╝██╔══██╗██╔══██╗██║    ██║    ██║
+    █████╔╝ ███████║██████╔╝██║    ██║ █╗ ██║
+    ██╔═██╗ ██╔══██║██╔══██╗██║    ██║███╗██║
+    ██║  ██╗██║  ██║██║  ██║██████╗╚███╔███╔╝
+    ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══╝╚══╝ 
+    
+    --]]
+    
+    --dont mess with he settings unless u know what ur doing
+    
+    local Settings = {
+        rewrittenmain = {
+            Enabled = true,
+            Key = "q",
+            DOT = true,
+            AIRSHOT = true,
+            NOTIF = true, 
+            AUTOPRED = false, 
+            FOV = math.huge,
+            RESOVLER = false 
+        }
+      }
+      
+      local SelectedPart = "UpperTorso"                              
+      local Prediction = true
+      local PredictionValue = 0.1259910                            
+      
+      
+        local AnchorCount = 0
+        local MaxAnchor = 50
+      
+        local CC = game:GetService"Workspace".CurrentCamera
+        local Plr;
+        local enabled = false
+        local accomidationfactor = 0.12348
+        local mouse = game.Players.LocalPlayer:GetMouse()
+        local placemarker = Instance.new("Part", game.Workspace)
+      
+        function makemarker(Parent, Adornee, Color, Size, Size2)
+            local e = Instance.new("BillboardGui", Parent)
+            e.Name = "PP"
+            e.Adornee = Adornee
+            e.Size = UDim2.new(Size, Size2, Size, Size2)
+            e.AlwaysOnTop = Settings.rewrittenmain.DOT
+            local a = Instance.new("Frame", e)
+            if Settings.rewrittenmain.DOT == true then
+            a.Size = UDim2.new(2, 2, 2)
+            else
+            a.Size = UDim2.new(0, 0, 0, 0)
+            end
+            if Settings.rewrittenmain.DOT == true then
+            a.Transparency = 0
+            a.BackgroundTransparency = 0
+            else
+            a.Transparency = 1
+            a.BackgroundTransparency = 1
+            end
+            a.BackgroundColor3 = Color
+            local g = Instance.new("UICorner", a)
+            if Settings.rewrittenmain.DOT == false then
+            g.CornerRadius = UDim.new(0, 0)
+            else
+            g.CornerRadius = UDim.new(1, 1)
+            end
+            return(e)
+        end
+      
+        
+        local data = game.Players:GetPlayers()
+        function noob(player)
+            local character
+            repeat wait() until player.Character
+            local handler = makemarker(guimain, player.Character:WaitForChild(SelectedPart), Color3.fromRGB(68, 214, 44), 0.3, 3)
+            handler.Name = player.Name
+            player.CharacterAdded:connect(function(Char) handler.Adornee = Char:WaitForChild(SelectedPart) end)
+      
+      
+            spawn(function()                                    
+                while wait() do                                     
+                    if player.Character then                                    
+                    end                                    
+                end                                     
+            end)                                    
+        end                                    
+      
+        for i = 1, #data do
+            if data[i] ~= game.Players.LocalPlayer then
+                noob(data[i])
+            end
+        end
+      
+        game.Players.PlayerAdded:connect(function(Player)
+            noob(Player)
+        end)
+      
+        spawn(function()
+            placemarker.Anchored = true
+            placemarker.CanCollide = false
+            if Settings.rewrittenmain.DOT == true then
+            placemarker.Size = Vector3.new(6, 6, 6)
+            else
+            placemarker.Size = Vector3.new(0, 0, 0)
+            end
+            placemarker.Transparency = 1
+            if Settings.rewrittenmain.DOT then
+            makemarker(placemarker, placemarker, Color3.fromRGB(68, 214, 44), 0.40, 0)
+            end
+        end)
+      
+        game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(k)
+            if k == Settings.rewrittenmain.Key and Settings.rewrittenmain.Enabled then
+                if enabled == true then
+                    enabled = false
+                    if Settings.rewrittenmain.NOTIF == true then
+                        Plr = getClosestPlayerToCursor()
+                    game.StarterGui:SetCore("SendNotification", {
+                Title = "Lock Notification",
+                Text = "Unlocked",
+                Icon = "",
+                Duration = 1,
+      })
+                end
+                else
+                    Plr = getClosestPlayerToCursor()
+                    enabled = true
+                    if Settings.rewrittenmain.NOTIF == true then
+      
+                        game.StarterGui:SetCore("SendNotification", {
+                Title = "Lock Notification",
+                Text = "Locked On :"..tostring(Plr.Name); 
+                Icon = "",
+                Duration = 1,
+      })
+      
+                    end
+                end
+            end
+        end)
+      
+      
+      
+        function getClosestPlayerToCursor()
+            local closestPlayer
+            local shortestDistance = Settings.rewrittenmain.FOV
+      
+            for i, v in pairs(game.Players:GetPlayers()) do
+                if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") then
+                    local pos = CC:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+                    local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
+                    if magnitude < shortestDistance then
+                        closestPlayer = v
+                        shortestDistance = magnitude
+                    end
+                end
+            end
+            return closestPlayer
+        end
+      
+        local pingvalue = nil;
+        local split = nil;
+        local ping = nil;
+      
+        game:GetService"RunService".Stepped:connect(function()
+            if enabled and Plr.Character ~= nil and Plr.Character:FindFirstChild("HumanoidRootPart") then
+                placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor))
+            else
+                placemarker.CFrame = CFrame.new(0, 9999, 0)
+            end
+            if Settings.rewrittenmain.AUTOPRED == true then
+                 pingvalue = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+                 split = string.split(pingvalue,'(')
+                 ping = tonumber(split[1])
+                if ping < 130 then
+                    PredictionValue = 0.151
+                elseif ping < 125 then
+                    PredictionValue = 0.149
+                elseif ping < 110 then
+                    PredictionValue = 0.146
+                elseif ping < 105 then
+                    PredictionValue = 0.138
+                elseif ping < 90 then
+                    PredictionValue = 0.136
+                elseif ping < 80 then
+                    PredictionValue = 0.134
+                elseif ping < 70 then
+                    PredictionValue = 0.131
+                elseif ping < 60 then
+                    PredictionValue = 0.1229
+                elseif ping < 50 then
+                    PredictionValue = 0.1225
+                elseif ping < 40 then
+                    PredictionValue = 0.1256
+                end
+            end
+        end)
+      
+        local mt = getrawmetatable(game)
+        local old = mt.__namecall
+        setreadonly(mt, false)
+        mt.__namecall = newcclosure(function(...)
+            local args = {...}
+            if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" and Settings.rewrittenmain.Enabled and Plr.Character ~= nil then
+      
+                -- args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor)
+                --[[
+                if Settings.rewrittenmain.AIRSHOT == true then
+                    if game.Workspace.Players[Plr.Name].Humanoid:GetState() == Enum.HumanoidStateType.Freefall then -- Plr.Character:WaitForChild("Humanoid"):GetState() == Enum.HumanoidStateType.Freefall
+                        
+                        --// Airshot
+                        args[3] = Plr.Character.LeftFoot.Position+(Plr.Character.LeftFoot.Velocity*PredictionValue)
+                    else
+                        args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*PredictionValue)
+                    end
+                else
+                        args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*PredictionValue)
+                end
+                ]]
+                if Prediction == true then
+                    
+                args[3] = Plr.Character[SelectedPart].Position+(Plr.Character[SelectedPart].Velocity*PredictionValue)
+      
+                else
+      
+                args[3] = Plr.Character[SelectedPart].Position
+      
+                end
+      
+                return old(unpack(args))
+            end
+            return old(...)
+        end)
+      
+        game:GetService("RunService").RenderStepped:Connect(function()
+            if Settings.rewrittenmain.RESOVLER == true and Plr.Character ~= nil and enabled and Settings.rewrittenmain.Enabled then
+            if Settings.rewrittenmain.AIRSHOT == true and enabled and Plr.Character ~= nil then
+                
+                if game.Workspace.Players[Plr.Name].Humanoid:GetState() == Enum.HumanoidStateType.Freefall then -- Plr.Character:WaitForChild("Humanoid"):GetState() == Enum.HumanoidStateType.Freefall
+                    
+                    --// Airshot
+      
+                    --// Anchor Check
+      
+                    if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                        AnchorCount = AnchorCount + 1
+                        if AnchorCount >= MaxAnchor then
+                            Prediction = false
+                            wait(2)
+                            AnchorCount = 0;
+                        end
+                    else
+                        Prediction = true
+                        AnchorCount = 0;
+                    end
+      
+                    SelectedPart = "HumanoidRootPart"
+      
+                else
+                    --// Anchor Check
+      
+                    if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                        AnchorCount = AnchorCount + 1
+                        if AnchorCount >= MaxAnchor then
+                            Prediction = false
+                            wait(2)
+                            AnchorCount = 0;
+                        end
+                    else
+                        Prediction = true
+                        AnchorCount = 0;
+                    end
+      
+                    SelectedPart = "HumanoidRootPart"
+      
+                end
+                else
+      
+                    --// Anchor Check
+      
+                    if Plr.Character ~= nil and Plr.Character.HumanoidRootPart.Anchored == true then
+                        AnchorCount = AnchorCount + 1
+                        if AnchorCount >= MaxAnchor then
+                            Prediction = false
+                            wait(2)
+                            AnchorCount = 0;
+                        end
+                    else
+                        Prediction = true
+                        AnchorCount = 0;
+                    end
+      
+                    SelectedPart = "HumanoidRootPart"
+                end
+      
+            else
+                    SelectedPart = "HumanoidRootPart"
+            end
+        end)
+      
+      --the cam lock
+      
+      getgenv().Prediction = 0.143105125985120958176	
+      getgenv().AimPart = "UpperTorso"	
+      getgenv().Key = "Q"	
+      getgenv().DisableKey = "P"	
+      
+      getgenv().FOV = true	
+      getgenv().ShowFOV = false	
+      getgenv().FOVSize = 55	
+      
+      --// Variables (Service)	
+      
+      local Players = game:GetService("Players")	
+      local RS = game:GetService("RunService")	
+      local WS = game:GetService("Workspace")	
+      local GS = game:GetService("GuiService")	
+      local SG = game:GetService("StarterGui")	
+      
+      --// Variables (regular)	
+      
+      local LP = Players.LocalPlayer	
+      local Mouse = LP:GetMouse()	
+      local Camera = WS.CurrentCamera	
+      local GetGuiInset = GS.GetGuiInset	
+      
+      local AimlockState = true	
+      local Locked	
+      local Victim	
+      
+      local SelectedKey = getgenv().Key	
+      local SelectedDisableKey = getgenv().DisableKey	
+        
+      --// Check if aimlock is loaded	
+      
+      if getgenv().Loaded == true then	
+        Notify("Aimlock is already loaded!")	
+        return	
+      end	
+      
+      getgenv().Loaded = true	
+      
+      --// FOV Circle	
+      
+      local fov = Drawing.new("Circle")	
+      fov.Filled = false	
+      fov.Transparency = 1	
+      fov.Thickness = 1	
+      fov.Color = Color3.fromRGB(255, 255, 0)	
+      fov.NumSideTs = 1000	
+      
+      --// Functions	
+      
+      function update()	
+        if getgenv().FOV == true then	
+            if fov then	
+      fov.Radius = getgenv().FOVSize * 2	
+                fov.Visible = getgenv().ShowFOV	
+      fov.Position = Vector2.new(Mouse.X, Mouse.Y + GetGuiInset(GS).Y)	
+      
+                return fov	
+            end	
+        end	
+      end	
+      
+      function WTVP(arg)	
+        return Camera:WorldToViewportPoint(arg)	
+      end	
+      
+      function WTSP(arg)	
+        return Camera.WorldToScreenPoint(Camera, arg)	
+      end	
+      
+      function getClosest()	
+        local closestPlayer	
+        local shortestDistance = math.huge	
+      
+        for i, v in pairs(game.Players:GetPlayers()) do	
+            local notKO = v.Character:WaitForChild("BodyEffects")["K.O"].Value ~= true	
+            local notGrabbed = v.Character:FindFirstChild("GRABBING_COINSTRAINT") == nil	
+              
+      if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild(getgenv().AimPart) and notKO and notGrabbed then	
+                local pos = Camera:WorldToViewportPoint(v.Character.PrimaryPart.Position)	
+      local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(Mouse.X, Mouse.Y)).magnitude	
+                  
+                if (getgenv().FOV) then	
+                    if (fov.Radius > magnitude and magnitude < shortestDistance) then	
+                        closestPlayer = v	
+                        shortestDistance = magnitude	
+                    end	
+                else	
+                    if (magnitude < shortestDistance) then	
+                        closestPlayer = v	
+                        shortestDistance = magnitude	
+                    end	
+                end	
+            end	
+        end	
+        return closestPlayer	
+      end	
+      
+      --// Checks if key is down	
+      
+      Mouse.KeyDown:Connect(function(k)	
+        SelectedKey = SelectedKey:lower()	
+        SelectedDisableKey = SelectedDisableKey:lower()	
+        if k == SelectedKey then	
+            if AimlockState == true then	
+                Locked = not Locked	
+                if Locked then	
+                    Victim = getClosest()	
+      
+                    Notify("Locked onto: "..tostring(Victim.Character.Humanoid.DisplayName))	
+                else	
+                    if Victim ~= nil then	
+                        Victim = nil	
+      
+                        Notify("Unlocked!")	
+                    end	
+                end	
+            else	
+                Notify("Aimlock is not enabled!")	
+            end	
+        end	
+        if k == SelectedDisableKey then	
+            AimlockState = not AimlockState	
+        end	
+      end)	
+      
+      --// Loop update FOV and loop camera lock onto target	
+      
+      RS.RenderStepped:Connect(function()	
+        update()	
+        if AimlockState == true then	
+            if Victim ~= nil then	
+                Camera.CFrame = CFrame.new(Camera.CFrame.p, Victim.Character[getgenv().AimPart].Position + Victim.Character[getgenv().AimPart].Velocity*getgenv().Prediction)	
+            end	
+        end	
+      end)	
+      while wait() do
+            if getgenv().AutoPrediction == true then	
+            local pingvalue = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()	
+            local split = string.split(pingvalue,'(')	
+      local ping = tonumber(split[1])	
+      if ping < 225 then	
+      getgenv().Prediction = 1.4	
+      elseif ping < 215 then	
+      getgenv().Prediction = 1.2	
+      elseif ping < 205 then
+      getgenv().Prediction = 1.0	
+      elseif ping < 190 then
+      getgenv().Prediction = 0.10	
+      elseif ping < 180 then	
+      getgenv().Prediction = 0.12	
+      elseif ping < 170 then
+      getgenv().Prediction = 0.15	
+      elseif ping < 160 then
+      getgenv().Prediction = 0.18	
+      elseif ping < 150 then
+      getgenv().Prediction = 0.110	
+      elseif ping < 140 then	
+      getgenv().Prediction = 0.113	
+      elseif ping < 130 then	
+      getgenv().Prediction = 0.116	
+      elseif ping < 120 then	
+      getgenv().Prediction = 0.120	
+      elseif ping < 110 then	
+      getgenv().Prediction = 0.124	
+      elseif ping < 105 then	
+      getgenv().Prediction = 0.127	
+      elseif ping < 90 then	
+      getgenv().Prediction = 0.130	
+      elseif ping < 80 then	
+      getgenv().Prediction = 0.133	
+      elseif ping < 70 then	
+      getgenv().Prediction = 0.136	
+      elseif ping < 60 then	
+      getgenv().Prediction = 0.140	
+      elseif ping < 50 then	
+      getgenv().Prediction = 0.143	
+      elseif ping < 40 then	
+      getgenv().Prediction = 0.145	
+      elseif ping < 30 then	
+      getgenv().Prediction = 0.155	
+      elseif ping < 20 then	
+      getgenv().Prediction = 0.157	
+            end	
+            end	
+      end 
+          end    
+    })
+    
+    -- Hacker Rage Section
+    
+    Hacker_RageT:AddButton({
+        Name = "Anti Toggle",
+        Callback = function()
+            game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(KeyPressed)
+                if KeyPressed == "m" then
+                   for L_170_forvar0, L_171_forvar1 in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                       if L_171_forvar1:IsA("BasePart") then
+                           L_171_forvar1:Destroy()
+                       end
+                   end
+                   end
+               end)
+          end    
+    })
+    
+    Hacker_RageT:AddButton({
+        Name = "Anti Fling",
+        Callback = function()
+            local localPlayer = game:GetService('Players').LocalPlayer;
+            local localCharacter = localPlayer.Character;
+            localCharacter:FindFirstChildOfClass('Humanoid').Health = 0;
+            local newCharacter = localPlayer.CharacterAdded:Wait();
+            local spoofFolder = Instance.new('Folder');
+            spoofFolder.Name = 'FULLY_LOADED_CHAR';
+            spoofFolder.Parent = newCharacter;
+            newCharacter:WaitForChild('RagdollConstraints'):Destroy();
+            local spoofValue = Instance.new('BoolValue', newCharacter);
+            spoofValue.Name = 'RagdollConstraints';
+            local name = game.Players.LocalPlayer.Name
+            local lol =    game.Workspace:WaitForChild(name)
+            local money = Instance.new("Folder",game.Players.LocalPlayer.Character);money.Name = "FULLY_LOADED_CHAR"
+            lol.Parent = game.Workspace.Players
+            game.Players.LocalPlayer.Character:WaitForChild("BodyEffects")
+            game.Players.LocalPlayer.Character.BodyEffects.BreakingParts:Destroy()
+          end    
+    })
+    
+    Hacker_RageT:AddButton({
+        Name = "Anti Bag",
+        Callback = function()
+            wait(0) local A_1 = "[Lockers Of Death] Anti-Bag Enabled" local A_2 = "All" local Event = game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest Event:FireServer(A_1, A_2) 
+            local LocalPlayer = game:GetService("Players").LocalPlayer
+            local char = LocalPlayer.Character
+            char.ChildAdded:Connect(function(sock)
+                if sock:IsA("MeshPart") then do
+                        wait(0)
+                        sock:Destroy()
+                    end
+                end
+            end)
+          end    
+    })
+    
+    Hacker_RageT:AddToggle({
+        Name = "Desync",
+        Default = false,
+        Callback = function(t)
+            if t then
+                getgenv().demisethebest = true 
+        
+                game:GetService("RunService").heartbeat:Connect(function()
+                    if getgenv().demisethebest == true then 
+                    local abc = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(1,1,1) * (2^16)
+                    game:GetService("RunService").RenderStepped:Wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = abc
+                    end 
+                end)
+            else
+                getgenv().demisethebest = false 
+        
+                game:GetService("RunService").heartbeat:Connect(function()
+                    if getgenv().demisethebest == true then 
+                    local abc = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(1,1,1) * (2^16)
+                    game:GetService("RunService").RenderStepped:Wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = abc
+                    end 
+                end)
+            end
+        end    
+    })
+    
+    Hacker_RageT:AddToggle({
+        Name = "Sky aa",
+        Default = false,
+        Callback = function(t)
+            if t then
+                getgenv().Sky = true 
+                getgenv().SkyAmount = 90
+                
+                game:GetService("RunService").heartbeat:Connect(function()
+                    if getgenv().Sky ~= false then 
+                    local vel = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,      getgenv().SkyAmount,0) 
+                    game:GetService("RunService").RenderStepped:Wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = vel
+                    end 
+                end)
+            else 
+                getgenv().Sky = false
+                getgenv().SkyAmount = 0
+                
+                game:GetService("RunService").heartbeat:Connect(function()
+                    if getgenv().Sky ~= false then 
+                    local vel = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,      getgenv().SkyAmount,0) 
+                    game:GetService("RunService").RenderStepped:Wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = vel
+                    end 
+                end)
+            end
+            print(t)
+        end    
+    })
+    
+    Hacker_RageT:AddButton({
+        Name = "Anti Autokill(Z)",
+        Callback = function()
+            local key = Enum.KeyCode.Z -- key to toggle invisibility
+    
+            --// dont edit script below
+            local invis_on = false
+            function onKeyPress(inputObject, chat)
+               if chat then return end
+               if inputObject.KeyCode == key then
+                   invis_on = not invis_on
+                   if invis_on then
+                       local savedpos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                       wait()
+                       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -200, 0)
+                       wait(.15)
+                       local Seat = Instance.new('Seat', game.Workspace)
+                       Seat.Anchored = false
+                       Seat.CanCollide = false
+                       Seat.Name = 'invischair'
+                       Seat.Transparency = 1
+                       Seat.Position = Vector3.new(0, -200, 0)
+                       local Weld = Instance.new("Weld", Seat)
+                       Weld.Part0 = Seat
+                       Weld.Part1 = game.Players.LocalPlayer.Character:FindFirstChild("Torso") or game.Players.LocalPlayer.Character.UpperTorso
+                       wait()
+                       Seat.CFrame = savedpos
+                       game.StarterGui:SetCore("SendNotification", {
+                           Title = "Invis On";
+                           Duration = 1;
+                           Text = "";
+                       })
+                   else
+                       workspace:FindFirstChild('invischair'):Remove()
+                       game.StarterGui:SetCore("SendNotification", {
+                           Title = "Invis Off";
+                           Duration = 1;
+                           Text = "";
+                       })
+                   end
+               end
+            end
+            
+            game:GetService("UserInputService").InputBegan:connect(onKeyPress)
+          end    
+    })
+
+    Hacker_RageT:AddButton({
+        Name = "Underground Anti(V)",
+        Callback = function()
+       
+            local Toggled = false
+            local KeyCode = 'v'
+            
+            
+            function AA()
+                local oldVelocity = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, -70, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, oldVelocity.Y, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, -70, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.Humanoid.HipHeight = 4.14
+            end
+            
+            game:GetService('UserInputService').InputBegan:Connect(function(Key)
+                if Key.KeyCode == Enum.KeyCode[KeyCode:upper()] and not game:GetService('UserInputService'):GetFocusedTextBox() then
+                    if Toggled then
+                        Toggled = false
+                        game.Players.LocalPlayer.Character.Humanoid.HipHeight = 1.85
+            
+                    elseif not Toggled then
+                        Toggled = true
+            
+                        while Toggled do
+                            AA()
+                            task.wait()
+                        end
+                    end
+                end
+            end)
+          end    
+    })
+    
+    Hacker_RageT:AddButton({
+        Name = "Random Anti(M)",
+        Callback = function()
+            local Toggled = false
+            local KeyCode = 'm'
+            
+            
+            function AA()
+                local oldVelocity = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, -70, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, oldVelocity.Y, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, -70, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.Humanoid.HipHeight = 4.14
+            end
+            
+            game:GetService('UserInputService').InputBegan:Connect(function(Key)
+                if Key.KeyCode == Enum.KeyCode[KeyCode:upper()] and not game:GetService('UserInputService'):GetFocusedTextBox() then
+                    if Toggled then
+                        Toggled = false
+                        game.Players.LocalPlayer.Character.Humanoid.HipHeight = 1.85
+            
+                    elseif not Toggled then
+                        Toggled = true
+            
+                        while Toggled do
+                            AA()
+                            task.wait()
+                        end
+                    end
+                end
+            end)local Toggled = false
+            local KeyCode = 'm'
+            
+            
+            function AA()
+                local oldVelocity = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, -70, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, oldVelocity.Y, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, -70, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.Humanoid.HipHeight = 4.14
+            end
+            
+            game:GetService('UserInputService').InputBegan:Connect(function(Key)
+                if Key.KeyCode == Enum.KeyCode[KeyCode:upper()] and not game:GetService('UserInputService'):GetFocusedTextBox() then
+                    if Toggled then
+                        Toggled = false
+                        game.Players.LocalPlayer.Character.Humanoid.HipHeight = 1.85
+            
+                    elseif not Toggled then
+                        Toggled = true
+            
+                        while Toggled do
+                            AA()
+                            task.wait()
+                        end
+                    end
+                end
+            end)
+          end    
+    })
+    
+    Hacker_RageT:AddButton({
+        Name = "Paid AA(N)",
+        Callback = function()
+            local Toggled = false
+            local KeyCode = 'n'
+            
+            
+            function AA()
+                local oldVelocity = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, -70, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, oldVelocity.Y, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(oldVelocity.X, -70, oldVelocity.Z)
+                game.Players.LocalPlayer.Character.Humanoid.HipHeight = 4.14
+            end
+            
+            game:GetService('UserInputService').InputBegan:Connect(function(Key)
+                if Key.KeyCode == Enum.KeyCode[KeyCode:upper()] and not game:GetService('UserInputService'):GetFocusedTextBox() then
+                    if Toggled then
+                        Toggled = false
+                        game.Players.LocalPlayer.Character.Humanoid.HipHeight = 1.85
+            
+                    elseif not Toggled then
+                        Toggled = true
+            
+                        while Toggled do
+                            AA()
+                            task.wait()
+                        end
+                    end
+                end
+            end)
+          end    
+    })
+    
+    Hacker_RageT:AddButton({
+        Name = "Unresolvable Anti",
+        Callback = function()
+            getgenv().Desync = true
+    
+    
+    
+    
+    
+            for _, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                if v:IsA("Script") and v.Name ~= "Health" and v.Name ~= "Sound" and v:FindFirstChild("LocalScript") then
+                    v:Destroy()
+                end
+            end
+            
+            
+            game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+                repeat
+                    wait()
+                until game.Players.LocalPlayer.Character
+                char.ChildAdded:Connect(function(child)
+                    if child:IsA("Script") then 
+                        wait(0.25)
+                        if child:FindFirstChild("LocalScript") then
+                            child.LocalScript:FireServer()
+                        end
+                    end
+                end)
+            end)
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            game.RunService.Heartbeat:Connect(function()
+                if Desync then
+                    local CurrentVelocity = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0,math.rad(0),0)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0,math.rad(0.01),0)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(3000, 3000 ,3000)
+                    game.RunService.RenderStepped:Wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = CurrentVelocity
+                end
+            end)
+            
+            wait(0.1)
+            getgenv().Desync = false
+            wait(0.1)
+            getgenv().Desync1 = true
+            
+            game.RunService.Heartbeat:Connect(function()
+                if getgenv().Desync1 then
+                    local CurrentVelocity = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0,math.rad(0),0)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0,math.rad(0.01),0)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(math.random(3000),math.random(3000),math.random(3000))
+                    game.RunService.RenderStepped:Wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = CurrentVelocity
+                end
+            end)
+            
+            wait(0.5)
+            
+            game.RunService.Heartbeat:Connect(function()
+                if Desync then
+                    local CurrentVelocity = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0,math.rad(0),0)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0,math.rad(0.01),0)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(3000, 3000 ,3000)
+                    game.RunService.RenderStepped:Wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = CurrentVelocity
+                end
+            end)
+            
+            wait(0.1)
+            getgenv().Desync = false
+            wait(0.1)
+            getgenv().Desync1 = true
+            
+            game.RunService.Heartbeat:Connect(function()
+                if getgenv().Desync1 then
+                    local CurrentVelocity = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0,math.rad(0),0)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0,math.rad(0.01),0)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(math.random(3000),math.random(3000),math.random(3000))
+                    game.RunService.RenderStepped:Wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = CurrentVelocity
+                end
+            end)
+          end    
+    })
+    
+    
+    OrionLib:Init()
